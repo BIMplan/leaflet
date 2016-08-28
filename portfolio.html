@@ -125,7 +125,6 @@ var getPopupContent = function(feature) {
         }
     }
     var properties={'id':feature.id};
-    var siteNum = feature.id.split("_");
     _.each(feature.properties, function(v,k) {
         if (k=='name' || k=='imageName') return;
         if (!v) return;
@@ -138,7 +137,7 @@ var getPopupContent = function(feature) {
     });
     
     var str = '';
-    str += '<h3><a href="https://bim-genie.com/static/planview/index.html?sysID=' + sysID + '&siteID=' + siteNum[1] + '" target="_blank">SiteID = ' + feature.id + '</a></h3>';
+    str += '<h3><a href="https://bim-genie.com/static/planview/index.html?sysID=' + sysID + '&siteID=' + feature.id + '" target="_blank">SiteID = ' + feature.id + '</a></h3>';
     str+='<table>'+(_.map(properties, function(v,k) { return '<tr><td valign="top">'+k+':</td><td valign="top">'+v+'<td></tr>'; }).join(''))+'</table>';
 
 

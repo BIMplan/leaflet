@@ -59,12 +59,6 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
-/*
-var floorID = "2562";
-var siteID = "759";
-var sysID = "161";
-var spaceID = "146312";
-*/
 
 var types={};
 var floorID = getUrlParameter('floorID');
@@ -73,12 +67,6 @@ var png = getUrlParameter('png');
 var siteID = getUrlParameter('siteID');
 var sysID = getUrlParameter('sysID');
 
-/*
-if(floorID){
-	var floorUrl = "https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=floors&floorID=" + floorID;
-	var spaceUrl = "https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=spaces&floorID=" + floorID;
-}
-*/
 var geojsonRequests1 = "<ul>"
 					+ "<li>"
 					+ "<a href='https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=sites' target='_blank'>Current Site</a>"
@@ -108,10 +96,15 @@ if(png == 0){
   png=1;
 }
 
-// initialize the map
+// initialize the map / set it to max Zoom of OpenStreetMap if no floors are shown
 // var map = L.map('map').setView([47.55895, -122.34165], 21);
-var map = L.map('map');
-
+if(floorID){
+	var map = L.map('map');
+}else{
+	var map = L.map('map', {
+		maxZoom: 19
+	});
+}
 // add various tile layers
 var Esri_WorldStreet = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
 	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
@@ -137,6 +130,11 @@ var MapBox = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?a
 	accessToken: 'pk.eyJ1IjoidGhvbWFzZGFsYmVydCIsImEiOiJjaXJ3cTZod3QwMDBqMnNsaHVlaWFtdjUzIn0.k68dm3gA3LSyuhD-IfHioA'
 });
 
+// show OpenStreetMap if no floors are shown
+if(!floorID){
+	OpenStreetMap.addTo(map);
+}
+
 var baseMaps = {
     "None": None,
     "Mapbox": MapBox,
@@ -145,12 +143,6 @@ var baseMaps = {
     "ESRI Street":Esri_WorldStreet
 };
 var control=L.control.layers(baseMaps).addTo(map);
-//L.control.sideBySide(OpenStreetMap, Esri_WorldImagery).addTo(map);
-
-//setup filter
-var layerFilter = function(feature) {
-    if (feature.properties.floorId === floorID || feature.id === floorID || feature.properties.featureType === "Building"  || feature.properties.featureType === "Site"  || feature.properties.featureType === "Component") return true
-}
   
 var getPopupContent = function(feature) {
     var formatLinks=function(links) {
@@ -190,8 +182,6 @@ var getPopupContent = function(feature) {
         properties[k]=v;
     });
     var str='';
-    //str+=_.map(properties, function(v,k) { return k+': '+v; }).join('<br />')
-    //str+='<dl>'+(_.map(properties, function(v,k) { return '<dt>'+k+'</dt><dd>'+v+'<dd>'; }).join(''))+'</dl>';
     str+='<table>'+(_.map(properties, function(v,k) { return '<tr><td valign="top">'+k+':</td><td valign="top">'+v+'<td></tr>'; }).join(''))+'</table>';
 
 
@@ -223,6 +213,7 @@ var popUp =function(feature,layer){
     }
 
 };
+
 var loaded={};
 var loadComponents=function(spaceID) {
     $('.leaflet-popup').remove();
@@ -249,26 +240,25 @@ var loadComponents=function(spaceID) {
         }
     });
 };
+
 var homeIcon = L.icon({
     iconUrl: 'home.png',
     iconSize: [27,21]
 });
   
-var placeholderIcon = L.icon({
-    iconUrl: 'furnBitmaps/Placeholder.png',
-    iconSize: [10,10]
-});
-
 var polygonstyle = function(feature){
       var fillColor, opacity=0.6, color="#000";
       if (feature.properties.featureType=='Site') {
           fillColor = '#43a2ca';
       } else if (feature.properties.featureType=='Building') {
           fillColor = '#99f';
+      } else if (feature.properties.featureType=='Floor') {
+          fillColor = '#99f';
       } else if (feature.properties.featureType=='Component') {
+          // polygon for components that don't use the PNGs (Firefox, Safari)
           opacity=0.3;
           color=fillColor = '#00f';
-      } else {
+      } else if (feature.properties.featureType=='Space') {
           number = feature.properties.number;
           if ( number == 101 ) fillColor = "#006837";
           else if ( number == 201 ) fillColor = "#31a354";
@@ -306,19 +296,7 @@ var addOverlay = function (url, layerName, params,z) {
         jsonp: "callback",
         dataType: "jsonp",
         success: function( response ) {
-            var layer;
-            if (layerName=='Component') {
-                // manually parse geojson, create overlays and insert into layer
-                if (png) {
-                    var components = _.map(response.features, function(f) { return createComponentOverlay(f,map); });
-                    var polygons = _.map(response.features, function(f) { return createComponentPolygon(f,map); });
-                    layer = L.layerGroup(components.concat(polygons)).setZIndex(z).addTo(map);
-                } else {
-                    layer = L.geoJson(response, params).setZIndex(z).addTo(map);
-                }
-            } else {
-                layer = L.geoJson(response, params).setZIndex(z).addTo(map);
-            }
+            var layer = L.geoJson(response, params).setZIndex(z).addTo(map);
             control.addOverlay(layer, layerName);
             if (layerName=='Site') {
                 var arr = response.features[0].geometry.coordinates[0];
@@ -341,7 +319,6 @@ var overlayParams={
 	dataType:"jsonp",
 	onEachFeature:popUp,
     style: polygonstyle,
-	filter: layerFilter,
 	pointToLayer: buildingmarker
 };
 
@@ -361,7 +338,6 @@ $.ajax({
         _.each(response.attributes, function(type) {
            types[type.id]=type;
         });
-        //addOverlay("https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=components&floorID=" + floorID + (spaceID?'&spaceID='+spaceID:''), 'Component', overlayParams,450);
     },
 });
 // manually add component layer

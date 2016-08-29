@@ -43,6 +43,7 @@
           </ul>
           <h4>GeoJSON web service requests for this plan:</h4>
           <p id="urlRequests"></p>
+          <p id="portfolio"></p>
     </div>
 <script><!-- 
 $(function() {
@@ -289,6 +290,11 @@ $(function() {
         }
         geojsonRequestsHtml += "</ul>";
         $("#urlRequests").html(geojsonRequestsHtml);
+    };
+    var updatePortfolioBacklinkHtml=function() {
+	    var portfolioBacklinkHtml='';
+	    portfolioBacklinkHtml="<a href='/static/planview/portfolio.html?sysID=" + sysID + "'>Return to Portfolio View</a>";
+	    $("#portfolio").html(portfolioBacklinkHtml);
     };
     // } End of functions definitions
 

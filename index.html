@@ -28,6 +28,7 @@
       #text ul strong {
           color: #ff0000;
       }
+      .leaflet-popup-content {width:600px !important;}
     </style>
 </head>
 <body>
@@ -62,6 +63,7 @@ $(function() {
 
     var createPopUp =function(feature,layer){
         var _getPopupContent = function(feature) {
+            var popupId = feature.properties.featureType+'_'+feature.id+'_popup';
             var formatLinks=function(links) {
                 return _.map(links, function(v) {
                     if (v.type && v.type=='file') {
@@ -81,7 +83,32 @@ $(function() {
                     }
                 }).join('<br />');
             }
-            var properties={'id':feature.id};
+            var properties={};
+            if (feature.properties.featureType=='Building') {
+                var _formatFloorLinks=function(floors) {
+                    return _.map(floors, function(floor) {
+                        return '<a href="/static/planview/index.html?sysID=' + sysID + '&siteID=' + siteID + '&floorID=' + floor.id + '" target="_self">' + floor.properties.name + '</a>';
+                    }).join('<br />');
+                };
+                if (loadedFloors[feature.id]) {
+                    properties['floors']=_formatFloorLinks(loadedFloors[feature.id]);
+                } else {
+                    properties['floors']='<h3>Loading</h3>';
+                    $.ajax({
+                        url: "https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=floors&bldgID=" + feature.id,
+                        jsonp: "callback",
+                        dataType: "jsonp",
+                        success: function (response) {
+                            loadedFloors[feature.id]=response.features;
+                            $('#'+popupId+' #floors').html(_formatFloorLinks(loadedFloors[feature.id]));
+                        }
+                    });
+                }
+            }
+
+
+
+            properties['id']=feature.id;
             _.each(feature.properties, function(v,k) {
                 if (k=='name' || k=='imageName') return;
                 if (!v) return; // skip values that are empty / false
@@ -93,7 +120,7 @@ $(function() {
                 properties[k]=v;
             });
             var html='';
-            html+='<table>'+(_.map(properties, function(v,k) { return '<tr><td valign="top">'+k+':</td><td valign="top">'+v+'<td></tr>'; }).join(''))+'</table>';
+            html+='<table id="'+popupId+'">'+(_.map(properties, function(v,k) { return '<tr><td valign="top">'+k+':</td><td id="'+k+'" valign="top">'+v+'<td></tr>'; }).join(''))+'</table>';
             return html;
         }
         if (feature.properties){
@@ -154,14 +181,15 @@ $(function() {
                     var polygons = _.map(response.features, function (f) {
                         return _createComponentPolygon(f, map);
                     });
-                    layer = L.layerGroup(components.concat(polygons)).setZIndex(z);
+                    layer = L.layerGroup(components.concat(polygons));
                 } else {
-                    layer = L.geoJson(response, overlayParams).setZIndex(z);
+                    layer = L.geoJson(response, overlayParams);
                 }
                 componentLayer.addLayer(layer);
             }
         });
     };
+    window.loadComponents=loadComponents;
       
     var createPolygonStyle = function(feature){
           var fillColor, opacity=0.6, color="#000";
@@ -229,7 +257,7 @@ $(function() {
     var createComponentsLayer=function() {
         // create an empty components layer;
         // components will be added  after clicking on the space popup link (Load components)
-        var componentLayer, z=1000, layerName='Components';
+        var z=1000, layerName='Components';
         componentLayer = L.layerGroup([]).setZIndex(z).addTo(map);
         control.addOverlay(componentLayer, layerName);
         map.on('zoomend', function() {
@@ -268,12 +296,14 @@ $(function() {
     // Variable definitions {
     // } End of variable definitions
     var componentTypes={}; // { componentTypeId: componentType }
-    var loadedComponents={}; // javascript object used to store loaded components ({ spaceId: true })
+    var loadedComponents={}; // object used to store loaded components ({ spaceId: true })
+    var loadedFloors={}; // object used to store loaded floors ({ bldgId: floors })
     var sysID = getUrlParameter('sysID');
     var siteID = getUrlParameter('siteID');
     var floorID = getUrlParameter('floorID');
     var spaceID = getUrlParameter('spaceID');
     var png = getUrlParameter('png');
+    var componentLayer;
     var control;
     if(png == 0){
         png="";

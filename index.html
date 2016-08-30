@@ -335,7 +335,7 @@ $(function() {
     var control;
     if(png == 0){
         png="";
-    }else if (L.Browser.safari || L.Browser.gecko) {
+    }else if ((L.Browser.safari && png != 1) || (L.Browser.gecko && png != 1)) {
         png="";
     }else{
         png=1;

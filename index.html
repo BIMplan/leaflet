@@ -31,7 +31,7 @@
       #text ul strong {
           color: #ff0000;
       }
-      .leaflet-popup-content {width:600px !important;}
+      .leaflet-popup-content {width:400px !important;}
     </style>
 </head>
 <body>
@@ -79,7 +79,9 @@ $(function() {
                         }
                     } else if (v.type && v.type=='image') {
                         if (v.url) {
-                            return '<a href="' + v.url + '" target="_blank"><img src="' + v.url + '" border="0" style="width:120px;" /></a>';
+	                        // removing display of thumbnail for now since it takes up too much space on the popup without scrolling
+                            //return '<a href="' + v.url + '" target="_blank"><img src="' + v.url + '" border="0" style="width:120px;" /></a>';
+                            return '<a href="' + v.url + '" target="_blank">' + v.name + '</a>';
                         } else {
                             return v.name;
                         }
@@ -199,11 +201,11 @@ $(function() {
     var createPolygonStyle = function(feature){
           var fillColor, opacity=0.6, color="#000";
           if (feature.properties.featureType=='Site') {
-              fillColor = '#43a2ca';
+              fillColor = '#d4fff4';
           } else if (feature.properties.featureType=='Building') {
               fillColor = '#99f';
           } else if (feature.properties.featureType=='Floor') {
-              fillColor = '#99f';
+              fillColor = '#b9b9e8';
           } else if (feature.properties.featureType=='Component') {
               // polygon for components that don't use the PNGs (Firefox, Safari)
               opacity=0.3;
@@ -215,7 +217,7 @@ $(function() {
               else if ( number == 102 ) fillColor = "#78c679";
               else if ( number == 202 ) fillColor = "#c2e699";
               else if ( number == 203 ) fillColor = "#ffffcc";
-              else fillColor = "#f7f7f7";  // no data
+              else fillColor = "#fff";  // no data
           }
           return { color: color, weight: 0.8, fillColor: fillColor, fillOpacity: opacity };
     };
@@ -235,7 +237,14 @@ $(function() {
             success: function( response ) {
                 var geoJsonLayer = L.geoJson(response, params).setZIndex(z).addTo(map);
                 layer.addLayer(geoJsonLayer);
-                if (layerName=='Site') {
+                if (layerName=='Floor' && floorID == true) {
+                    var arr = response.features[0].geometry.coordinates[0];
+                    var latlngs = _.map(arr, function(elem) { return [elem[1],elem[0]]; });
+                    var polygon = L.polygon(latlngs);
+                    map.fitBounds(polygon.getBounds(),{
+                        //padding: [2,2]
+                    });
+                }else if (layerName=='Site' ) {
                     var arr = response.features[0].geometry.coordinates[0];
                     var latlngs = _.map(arr, function(elem) { return [elem[1],elem[0]]; });
                     var polygon = L.polygon(latlngs);

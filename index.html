@@ -46,6 +46,7 @@
           </ul>
           <h4>GeoJSON web service requests for this plan:</h4>
           <p id="urlRequests"></p>
+          <p id="site"></p>
           <p id="portfolio"></p>
     </div>
 <script><!--
@@ -202,6 +203,7 @@ $(function() {
           var fillColor, opacity=0.6, color="#000";
           if (feature.properties.featureType=='Site') {
               fillColor = '#d4fff4';
+              opacity=0.5;
           } else if (feature.properties.featureType=='Building') {
               fillColor = '#99f';
           } else if (feature.properties.featureType=='Floor') {
@@ -304,10 +306,15 @@ $(function() {
         geojsonRequestsHtml += "</ul>";
         $("#urlRequests").html(geojsonRequestsHtml);
     };
-    var updatePortfolioBacklinkHtml=function() {
-	    var portfolioBacklinkHtml='';
-	    portfolioBacklinkHtml="<a href='/static/planview/portfolio.html?sysID=" + sysID + "'>Return to Portfolio View</a>";
-	    $("#portfolio").html(portfolioBacklinkHtml);
+    var updatePortfolioBackLinkHtml=function() {
+	    var portfolioBackLinkHtml='';
+	    portfolioBackLinkHtml="<a href='/static/planview/portfolio.html?sysID=" + sysID + "'>Return to Portfolio View</a>";
+	    $("#portfolio").html(portfolioBackLinkHtml);
+    };
+    var updateSiteLinkHtml=function() {
+	    var siteLinkHtml='';
+	    siteLinkHtml="<a href='/static/planview/portfolio.html?sysID=" + sysID + "&siteID=" + siteID + "'>Site View</a>";
+	    $("#site").html(siteLinkHtml);
     };
     // } End of functions definitions
 
@@ -393,6 +400,7 @@ $(function() {
     }
     updateUrlRequestsHtml();
     updatePortfolioBacklinkHtml();
+    updateSiteLinkHtml();
 });
 --></script>
 </body>

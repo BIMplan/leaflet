@@ -202,7 +202,7 @@ $(function() {
     window.loadComponents=loadComponents;
       
     var createPolygonStyle = function(feature){
-          var fillColor, opacity=0.6, color="#000";
+          var fillColor="#fff", opacity=0.6, color="#000";
           if (feature.properties.featureType=='Site') {
               fillColor = '#d4fff4';
               opacity=0.2;
@@ -215,13 +215,13 @@ $(function() {
               opacity=0.3;
               color=fillColor = '#00f';
           } else if (feature.properties.featureType=='Space') {
-              number = feature.properties.number;
-              if ( number == 101 ) fillColor = "#006837";
-              else if ( number == 201 ) fillColor = "#31a354";
-              else if ( number == 102 ) fillColor = "#78c679";
-              else if ( number == 202 ) fillColor = "#c2e699";
-              else if ( number == 203 ) fillColor = "#ffffcc";
-              else fillColor = "#fff";  // no data
+              if (feature.properties.hasComponents){
+	              fillColor = "#f3ffa7";
+	              color = "#F00";
+              }else{
+	              fillColor = "#fff";
+	              color = "#000";
+              }
           }
           return { color: color, weight: 0.8, fillColor: fillColor, fillOpacity: opacity };
     };

@@ -237,7 +237,7 @@ $(function() {
             success: function( response ) {
                 var geoJsonLayer = L.geoJson(response, params).setZIndex(z).addTo(map);
                 layer.addLayer(geoJsonLayer);
-                if (layerName=='Floor' && floorID == true) {
+                if (layerName=='Floor' && floorID) {
                     var arr = response.features[0].geometry.coordinates[0];
                     var latlngs = _.map(arr, function(elem) { return [elem[1],elem[0]]; });
                     var polygon = L.polygon(latlngs);

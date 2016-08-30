@@ -31,7 +31,11 @@
       #text ul strong {
           color: #ff0000;
       }
-      .leaflet-popup-content {width:400px !important;}
+      .leaflet-popup-content {
+	      width:400px !important;
+	      height:400px !important;
+	      overflow-y: scroll !important;
+	  }
     </style>
 </head>
 <body>
@@ -81,8 +85,8 @@ $(function() {
                     } else if (v.type && v.type=='image') {
                         if (v.url) {
 	                        // removing display of thumbnail for now since it takes up too much space on the popup without scrolling
-                            //return '<a href="' + v.url + '" target="_blank"><img src="' + v.url + '" border="0" style="width:120px;" /></a>';
-                            return '<a href="' + v.url + '" target="_blank">' + v.name + '</a>';
+                            return '<a href="' + v.url + '" target="_blank"><img src="' + v.url + '" border="0" style="width:120px;" /></a>';
+                            //return '<a href="' + v.url + '" target="_blank">' + v.name + '</a>';
                         } else {
                             return v.name;
                         }

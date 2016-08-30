@@ -32,7 +32,7 @@
           color: #ff0000;
       }
       .leaflet-popup-content {
-	      width:400px !important;
+	      width:350px !important;
 	      height:400px !important;
 	      overflow-y: scroll !important;
 	  }
@@ -84,9 +84,7 @@ $(function() {
                         }
                     } else if (v.type && v.type=='image') {
                         if (v.url) {
-	                        // removing display of thumbnail for now since it takes up too much space on the popup without scrolling
                             return '<a href="' + v.url + '" target="_blank"><img src="' + v.url + '" border="0" style="width:120px;" /></a>';
-                            //return '<a href="' + v.url + '" target="_blank">' + v.name + '</a>';
                         } else {
                             return v.name;
                         }
@@ -317,7 +315,7 @@ $(function() {
     };
     var updateSiteLinkHtml=function() {
 	    var siteLinkHtml='';
-	    siteLinkHtml="<a href='/static/planview/portfolio.html?sysID=" + sysID + "&siteID=" + siteID + "'>Site View</a>";
+	    siteLinkHtml="<a href='/static/planview/index.html?sysID=" + sysID + "&siteID=" + siteID + "'>Site View</a>";
 	    $("#site").html(siteLinkHtml);
     };
     // } End of functions definitions

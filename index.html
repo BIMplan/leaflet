@@ -240,6 +240,17 @@ $(function() {
         })});
     };
     var createLayer = function (url, layerName, params,z) {
+        var _getFeatureBounds=function(feature) {
+            var arr;
+            if (feature.geometry.type=='MultiPolygon') {
+                arr = _.flatten(_.flatten(feature.geometry.coordinates, true), true);
+            } else if (feature.geometry.type=='Polygon') {
+                arr = _.flatten(feature.geometry.coordinates, true);
+            }
+            var latlngs = _.map(arr, function(elem) { return [elem[1],elem[0]]; });
+            var polygon = L.polygon(latlngs);
+            return polygon.getBounds();
+        };
         var layer = L.layerGroup([]).setZIndex(z).addTo(map);
         control.addOverlay(layer, layerName);
         $.ajax({url:url,
@@ -249,19 +260,9 @@ $(function() {
                 var geoJsonLayer = L.geoJson(response, params).setZIndex(z).addTo(map);
                 layer.addLayer(geoJsonLayer);
                 if (layerName=='Floor' && floorID) {
-                    var arr = response.features[0].geometry.coordinates[0];
-                    var latlngs = _.map(arr, function(elem) { return [elem[1],elem[0]]; });
-                    var polygon = L.polygon(latlngs);
-                    map.fitBounds(polygon.getBounds(),{
-                        //padding: [2,2]
-                    });
+                    map.fitBounds(_getFeatureBounds(response.features[0]));
                 }else if (layerName=='Site' ) {
-                    var arr = response.features[0].geometry.coordinates[0];
-                    var latlngs = _.map(arr, function(elem) { return [elem[1],elem[0]]; });
-                    var polygon = L.polygon(latlngs);
-                    map.fitBounds(polygon.getBounds(),{
-                        //padding: [2,2]
-                    });
+                    map.fitBounds(_getFeatureBounds(response.features[0]));
                 }
             }});
     };

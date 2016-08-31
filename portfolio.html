@@ -107,6 +107,7 @@ $(function() {
                 var layer = L.geoJson(response, {
                     onEachFeature: onEachFeature
                 });
+                map.fitBounds(layer.getBounds());
             }
         });
     };
@@ -161,7 +162,7 @@ $(function() {
     // } End of variable definitions
 
     // initialize the map
-    var map = L.map('map').setView([40, -100], 4);
+    var map = L.map('map');
     OpenStreetMap.addTo(map);
     control=L.control.layers(baseMaps).addTo(map);
     L.control.scale({

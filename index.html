@@ -407,6 +407,12 @@ $(function() {
         createLayer("https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=spaces&floorID=" + floorID, 'Space', overlayParams,440);
         loadComponentTypes();
         createComponentsLayer();
+    } else {
+        //create floor layer without popup
+        createLayer("https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=floors", 'Floor', {
+            dataType:"jsonp",
+            style: createPolygonStyle
+        },430);
     }
     updateUrlRequestsHtml();
     updatePortfolioBackLinkHtml();

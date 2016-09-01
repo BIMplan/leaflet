@@ -5,7 +5,13 @@ Leaflet BIMplan creates building plan overlays from GeoJSON web services
 
 Leaflet BIMplan creates building plan overlays from GeoJSON web services.
 
-Although it's working very well, it is still a beta version with some known issues:
+This is a prototype viewer that is part of BIMStorm.
+
+This runs best on Chrome browsers. Other browsers work, but the equipment level plans do not render images yet.
+
+Join [BIMStorm.com](http://BIMStorm.com) to learn more and how you can use this and expand the functionality.
+
+Some of the known issues:
 
 - Not all building equipment and furniture is displaying correctly with the rotated image overlays in all browsers. For Firefox and Safari we change to display furniture as orthogonal and rotated polygons instead of the image overlays.
 - The furniture display works best in Google Chrome but also in Internet Explorer 11 (surprise!) (no earlier versions have been tested)

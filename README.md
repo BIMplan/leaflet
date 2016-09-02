@@ -5,7 +5,7 @@ Leaflet BIMplan creates building plan overlays from GeoJSON web services
 
 Leaflet BIMplan creates building plan overlays from GeoJSON web services.
 
-This is a prototype viewer that is part of BIMStorm Data Independence.
+This is a prototype viewer that is part of BIMstorm Data Independence.
 
 This runs best on Chrome browsers. Other browsers work, but the equipment level plans do not render images yet.
 

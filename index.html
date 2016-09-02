@@ -13,52 +13,69 @@
     <script src="js/leaflet.js"></script>
     <script src="js/Leaflet.ImageOverlay.Rotated.js"></script>
     <style>
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0;}
-      #map {
-          height: 100%;
-          width: 80%;
-          border: 1px solid #000000;
-          float: left;
-      }
-      #text {
-          float: left;
-          width: 200px;
-          padding: 10px;
-          font-family: sans-serif;
-          font-size: 14px;
-      }
-      #text ul strong {
-          color: #ff0000;
-      }
-      .leaflet-popup-content {
-	      width:350px !important;
-	      height:400px !important;
-	      overflow-y: scroll !important;
-	  }
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0;}
+        #map {
+            height: 100%;
+            width: 80%;
+            border: 1px solid #000000;
+            float: left;
+        }
+        #text {
+            float: left;
+            width: 200px;
+            padding: 10px;
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+        #text ul strong {
+            color: #ff0000;
+        }
+        .leaflet-popup-content {
+            width:350px !important;
+            height:400px !important;
+            overflow-y: scroll !important;
+        }
+        .btn {
+            -webkit-border-radius: 5;
+            -moz-border-radius: 5;
+            border-radius: 5px;
+            font-family: Arial;
+            color: #ffffff;
+            font-size: 14px;
+            text-align: center;
+            background: #3b7094;
+            padding: 5px 20px 5px 20px;
+            display: block;
+            margin: 5px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #459bd1;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
     <div id="text">
-          <h2>Leaflet BIMplan</h2>Interactive floor plans generated with GeoJSON data web services from the <a href="http://onuma.com" target="_blank">ONUMA Cloud Server</a>.
-          <p><a href="http://bimstorms.weebly.com/geojson.html" target="_blank">About Leaflet BIMplan</a></p>
-          <p>This is a prototype viewer that is part of BIMStorm.<br>
-			  This runs best on Chrome browsers.<br>
-			  Other browsers work, but the equipment level plans do not render images yet.<p>
-		  <p>Join <a href="http://BIMStorm.com" target="_blank">BIMStorm.com</a> to learn more and how you can use this and expand the functionality.</p>
-          <ul>
-	          <li id="portfolio"></li>
-	          <li id="site"></li>
-          </ul>
-          <ul>
-              <li>Select or de-select layers from the layer popup on the top-right.</li>
-              <li>Background maps can be selected when zooming out far enough.</li>
-              <li><strong>Click on spaces (with red outlines) to load components dynamically.</strong></li>
-              <li>At some point when zooming out, components are being turned off.</li>
-          </ul>
-          <h4>GeoJSON web service requests for this plan:</h4>
-          <p id="urlRequests"></p>
+        <h2>Leaflet BIMplan</h2>Interactive floor plans generated with GeoJSON data web services from the <a href="http://onuma.com" target="_blank">ONUMA Cloud Server</a>.
+        <p><a href="http://bimstorms.weebly.com/geojson.html" target="_blank">About Leaflet BIMplan</a></p>
+        <p>This is a prototype viewer that is part of BIMStorm.<br>
+            This runs best on Chrome browsers.<br>
+            Other browsers work, but the equipment level plans do not render images yet.<p>
+        <p>Join <a href="http://BIMStorm.com" target="_blank">BIMStorm.com</a> to learn more and how you can use this and expand the functionality.</p>
+        <div id="portfolio"></div>
+        <div id="site"></div>
+        <ul>
+            <li>Select or de-select layers from the layer popup on the top-right.</li>
+            <li>Background maps can be selected when zooming out far enough.</li>
+            <li><strong>Click on spaces (with red outlines) to load components dynamically.</strong></li>
+            <li>At some point when zooming out, components are being turned off.</li>
+        </ul>
+        <h4>GeoJSON web service requests for this plan:</h4>
+        <p id="urlRequests"></p>
     </div>
 <script><!--
 /*! Leaflet BIMplan | (c) Onuma, Inc. | https://github.com/BIMplan/leaflet */
@@ -318,12 +335,12 @@ $(function() {
     };
     var updatePortfolioBackLinkHtml=function() {
 	    var portfolioBackLinkHtml='';
-	    portfolioBackLinkHtml="<a href='/static/planview/portfolio.html?sysID=" + sysID + "'>Return to Portfolio View</a>";
+	    portfolioBackLinkHtml="<a class='btn' href='/static/planview/portfolio.html?sysID=" + sysID + "'>Portfolio</a>";
 	    $("#portfolio").html(portfolioBackLinkHtml);
     };
     var updateSiteLinkHtml=function() {
 	    var siteLinkHtml='';
-	    siteLinkHtml="<a href='/static/planview/index.html?sysID=" + sysID + "&siteID=" + siteID + "'>Site View</a>";
+	    siteLinkHtml="<a class='btn' href='/static/planview/index.html?sysID=" + sysID + "&siteID=" + siteID + "'>Site View</a>";
 	    $("#site").html(siteLinkHtml);
     };
     // } End of functions definitions
@@ -407,6 +424,7 @@ $(function() {
         createLayer("https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=spaces&floorID=" + floorID, 'Space', overlayParams,440);
         loadComponentTypes();
         createComponentsLayer();
+        updateSiteLinkHtml();
     } else {
         //create floor layer without popup
         createLayer("https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=floors", 'Floor', {
@@ -416,7 +434,6 @@ $(function() {
     }
     updateUrlRequestsHtml();
     updatePortfolioBackLinkHtml();
-    updateSiteLinkHtml();
 });
 --></script>
 </body>

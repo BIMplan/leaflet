@@ -48,6 +48,21 @@
             color: #ff0000;
             font-weight: bold;
         }
+        #urlRequests ul  {
+            padding-left:0;
+            margin-left:20px;
+        }
+        #urlRequests ul li  {
+            list-style-position:outside;
+        }
+        #urlRequests ul li:first-child {
+            list-style-type: none;
+        }
+        .list-title {
+            margin-bottom:-10px;
+        }
+
+
         .leaflet-popup-content {
             width:350px !important;
             height:400px !important;
@@ -87,7 +102,7 @@
             <div id="portfolio"></div>
             <div id="site"></div>
             <p id="planInfo"></p>
-            <h4>For App Developers</h4>
+            <h4 class="list-title">For App Developers</h4>
             <p id="urlRequests"></p>
         </aside>
     </div>

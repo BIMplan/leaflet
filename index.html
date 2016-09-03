@@ -87,7 +87,7 @@
             <div id="portfolio"></div>
             <div id="site"></div>
             <p id="planInfo"></p>
-            <h4>GeoJSON web service responses for current plan:</h4>
+            <h4>For App Developers</h4>
             <p id="urlRequests"></p>
         </aside>
     </div>
@@ -337,6 +337,9 @@ $(function() {
     var updateUrlRequestsHtml=function() {
         var geojsonRequestsHtml='';
         geojsonRequestsHtml += "<ul>"
+                            + "<li>"
+                            + "GeoJSON web service responses for current plan:"
+                            + "</li>"
                             + "<li>"
                             + "<a href='https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=sites' target='_blank'>Current Site</a>"
                             + "</li>"

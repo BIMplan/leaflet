@@ -203,7 +203,7 @@ $(function() {
                 layer.bindPopup(function() {
                     var title='<h2>'+(feature.properties.number?feature.properties.number+' - ':'')+feature.properties.name+'</h2>';
                     var content=title+_getPopupContent(feature);
-                    if (feature.properties.featureType=='Space' && !loadedComponents[feature.id]) {
+                    if (feature.properties.featureType=='Space' && loadedComponents!==false && !loadedComponents[feature.id]) {
                         // If it is a space popup (and the components are not yet loadedComponents for this space), show link to load components
                         content+='<a href="javascript:;" onclick="loadComponents('+feature.id+');">Load components</a>';
                     }
@@ -215,11 +215,15 @@ $(function() {
     var loadComponents=function(spaceID) {
         $('.leaflet-popup').remove();
         $.ajax({
-            url: "https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=components&floorID=" + floorID + '&spaceID=' + spaceID,
+            url: "https://www.onuma.com/plan/OPS/export/saveGeoJSON.php?sysID=" + sysID + "&siteID=" + siteID + "&object=components&floorID=" + floorID + (spaceID?'&spaceID=' + spaceID:''),
             jsonp: "callback",
             dataType: "jsonp",
             success: function (response) {
-                loadedComponents[spaceID]=true;
+                if (spaceID) {
+                    loadedComponents[spaceID]=true;
+                } else {
+                    loadedComponents=false;
+                }
                 var layer;
                 // manually parse geojson, create overlays and insert into layer
                 if (png) {

@@ -101,6 +101,7 @@
                 Join <a href="http://BIMStorm.com" target="_blank">BIMStorm.com</a> to learn more and how you can use this and expand the functionality.</p>
             <div id="portfolio"></div>
             <div id="site"></div>
+            <div id="loadComponents"></div>
             <p id="planInfo"></p>
             <h4 class="list-title">For App Developers</h4>
             <p id="urlRequests"></p>
@@ -382,6 +383,11 @@ $(function() {
 	    siteLinkHtml="<a class='btn' href='/static/planview/index.html?sysID=" + sysID + "&siteID=" + siteID + "'>Site View</a>";
 	    $("#site").html(siteLinkHtml);
     };
+    var updateLoadComponentsHtml=function() {
+	    var loadComponentsHtml='';
+	    loadComponentsHtml="<a class='btn' href='' onclick='return loadComponents();'>Load All Components</a>";
+	    $("#loadComponents").html(loadComponentsHtml);
+    };
     // } End of functions definitions
 
 
@@ -464,6 +470,7 @@ $(function() {
         loadComponentTypes();
         createComponentsLayer();
         updateSiteLinkHtml();
+        updateLoadComponentsHtml();
         updateInfoHtml();
     } else {
         //create floor layer without popup

@@ -85,6 +85,7 @@
 
         .btn:hover {
             background: #459bd1;
+            cursor: pointer;
             text-decoration: none;
         }
     </style>
@@ -350,7 +351,7 @@ $(function() {
     };
     var updateInfoHtml=function() {
         var infoHtml='';
-        infoHtml    += "Click on spaces <span class='red'>with red outlines</span> to load components dynamically.<br>"
+        infoHtml    += "<strong>OR</strong> click on spaces <span class='red'>with red outlines</span> to load components of individual spaces.<br>"
                     + "At some point when zooming out, components are being turned off.";
          $("#planInfo").html(infoHtml);
     }
@@ -389,7 +390,7 @@ $(function() {
     };
     var updateLoadComponentsHtml=function() {
 	    var loadComponentsHtml='';
-	    loadComponentsHtml="<a class='btn' href='' onclick='return loadComponents();'>Load All Components</a>";
+	    loadComponentsHtml="<a class='btn' onclick='loadComponents()'>Load All Components</a>";
 	    $("#loadComponents").html(loadComponentsHtml);
     };
     // } End of functions definitions
